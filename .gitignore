@@ -37,3 +37,8 @@ test.png
 .directory
 thumbs.db
 thumbs.db:encryptable
+
+# WASM
+catprinter-wasm/.appveyor.yml
+catprinter-wasm/.gitignore
+catprinter-wasm/.travis.yml
