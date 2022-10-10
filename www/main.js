@@ -483,7 +483,9 @@ class CanvasController {
             let canvas = this.canvas;
             let ctx = canvas.getContext('2d');
 
-            //FIXME: Rotated size does not match normal size
+            //FIXME: Rotated size does not match default size.
+            //       Somehow this causes the image resolution to be reduced every time the image is rotated
+            //TODO: Custom rotation value
             if (this.rotate) {
                 this.height = canvas.width;
                 canvas.height = canvas.width;
