@@ -9,6 +9,8 @@ License GPL-3.0-or-later: https://www.gnu.org/licenses/gpl-3.0.html
 
 'use strict';
 
+
+
 /**
  * In order to debug on a phone, we load vConsole
  * https://www.npmjs.com/package/vconsole
@@ -480,25 +482,22 @@ class CanvasController {
         img.addEventListener('load', () => {
             let canvas = this.canvas;
             let ctx = canvas.getContext('2d');
+
+            //FIXME: Rotated size does not match normal size
             if (this.rotate) {
-                let w = canvas.width;
-                let h = this.height = Math.floor(canvas.width * img.width / img.height);
-                before.width = h, before.height = w;
-                b_ctx.drawImage(img, 0, 0, h, w);
-                let data = new ImageData(
-                    new Uint8ClampedArray(
-                        rotateRgba(
-                            new Uint32Array(
-                                b_ctx.getImageData(0, 0, h, w).data.buffer
-                            ), w, h
-                        ).buffer
-                    ), w, h
-                );
-                ctx.putImageData(data, 0, 0);
+                this.height = canvas.width;
+                canvas.height = canvas.width;
+                canvas.width = Math.floor(canvas.width * (img.height / img.width)) * 1.5
+                ctx.save();
+                ctx.rotate(90 * Math.PI / 180);
+                // ctx.translate(this.width / 2, this.height / 2);
+                ctx.drawImage(img, 0, -canvas.width, canvas.height, canvas.width);
+                ctx.restore();
             } else {
                 this.height = Math.floor(canvas.width * img.height / img.width);
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             }
+
             this.crop();
             this.isImageNew = true;
             this.activatePreview();
