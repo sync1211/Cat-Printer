@@ -474,26 +474,23 @@ class CanvasController {
         this.isImageNew = false;
     }
     putImage(url) {
-        let before = document.createElement('canvas');
-        let b_ctx = before.getContext('2d');
-        let img = document.getElementById('img');
+        const img = document.getElementById('img');
         img.src = ''; // trigger some dumb browser
         img.src = url;
         img.addEventListener('load', () => {
-            let canvas = this.canvas;
-            let ctx = canvas.getContext('2d');
+            const canvas = this.canvas;
+            const ctx = canvas.getContext('2d');
 
-            //FIXME: Rotated size does not match default size.
-            //       Somehow this causes the image resolution to be reduced every time the image is rotated
-            //TODO: Custom rotation value
             if (this.rotate) {
                 this.height = canvas.width;
-                canvas.height = canvas.width;
-                canvas.width = Math.floor(canvas.width * (img.height / img.width)) * 1.5
+                this.width = canvas.height;
+
+                canvas.height = this.height;
+                canvas.width = this.width;
+
                 ctx.save();
                 ctx.rotate(90 * Math.PI / 180);
-                // ctx.translate(this.width / 2, this.height / 2);
-                ctx.drawImage(img, 0, -canvas.width, canvas.height, canvas.width);
+                ctx.drawImage(img, 0, -this.width, this.height, this.width);
                 ctx.restore();
             } else {
                 this.height = Math.floor(canvas.width * img.height / img.width);
