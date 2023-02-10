@@ -26,42 +26,42 @@ bundle-bare: prepare
 
 bundle-all: bundle-windows bundle-linux bundle-bare 
 
-apk: clean-apk bundle-bare
-	$(info Building release APK...)
-	cd build-android; \
-	unzip -q "./cat-printer-bare-$(version).zip"; \
-	mv "cat-printer" "build-dist"; \
-	p4a apk --private "dist" --dist_name="cat-printer" --package="io.github.naitlee.catprinter" --name="Cat Printer" \
-		--icon=icon.png --version="$(version)" --bootstrap=webview --window --requirements="`cat build-deps.txt`" \
-		--blacklist-requirements=sqlite3,openssl --port=8095 --arch=arm64-v8a --release \
-		--presplash=blank.png --presplash-color=black --add-source="advancedwebview" --orientation=user \
-		--permission=BLUETOOTH --permission=BLUETOOTH_SCAN --permission=BLUETOOTH_CONNECT \
-		--permission=BLUETOOTH_ADMIN --permission=ACCESS_FINE_LOCATION --permission=ACCESS_COARSE_LOCATION $@
-
-	$(MAKE) apk-sign
-
-apk-sign:
-	cd build-android; \
-
-	$(shell $ANDROIDSDK/build-tools/*/zipalign 4 "cat-printer-release-unsigned-$(version)-.apk" $signed_apk); \
-	$(shell $ANDROIDSDK/build-tools/*/apksigner sign --ks $1 "cat-printer-android-$(version).apk"); \
-	$(info Build complete! Moving APK...); \
-	mv $signed_apk $signed_apk.idsig ../; \
-
-clean-apk:
-	$(info Removing build APK files...)
-	rm -rf build-android/dist
-	rm -f build-android/*.apk
-
-
-build-android: prepare
-	$(info Building android version...)
-	p4a apk --private .. --dist_name="cat-printer" --package="io.github.naitlee.catprinter" --name="Cat Printer" \
-		--icon=icon.png --version=$(version) --bootstrap=webview --window --requirements="`cat build-deps.txt`" \
-		--blacklist-requirements=sqlite3,openssl --port=8095 --arch=arm64-v8a --blacklist="blacklist.txt" \
-		--presplash=blank.png --presplash-color=black --add-source="advancedwebview" --orientation=user \
-		--permission=BLUETOOTH --permission=BLUETOOTH_SCAN --permission=BLUETOOTH_CONNECT \
-		--permission=BLUETOOTH_ADMIN --permission=ACCESS_FINE_LOCATION --permission=ACCESS_COARSE_LOCATION $@
+#apk: clean-apk bundle-bare
+#	$(info Building release APK...)
+#	cd build-android; \
+#	unzip -q "./cat-printer-bare-$(version).zip"; \
+#	mv "cat-printer" "build-dist"; \
+#	p4a apk --private "dist" --dist_name="cat-printer" --package="io.github.naitlee.catprinter" --name="Cat Printer" \
+#		--icon=icon.png --version="$(version)" --bootstrap=webview --window --requirements="`cat build-deps.txt`" \
+#		--blacklist-requirements=sqlite3,openssl --port=8095 --arch=arm64-v8a --release \
+#		--presplash=blank.png --presplash-color=black --add-source="advancedwebview" --orientation=user \
+#		--permission=BLUETOOTH --permission=BLUETOOTH_SCAN --permission=BLUETOOTH_CONNECT \
+#		--permission=BLUETOOTH_ADMIN --permission=ACCESS_FINE_LOCATION --permission=ACCESS_COARSE_LOCATION $@
+#
+#	$(MAKE) apk-sign
+#
+#apk-sign:
+#	cd build-android; \
+#
+#	$(shell $ANDROIDSDK/build-tools/*/zipalign 4 "cat-printer-release-unsigned-$(version)-.apk" $signed_apk); \
+#	$(shell $ANDROIDSDK/build-tools/*/apksigner sign --ks $1 "cat-printer-android-$(version).apk"); \
+#	$(info Build complete! Moving APK...); \
+#	mv $signed_apk $signed_apk.idsig ../; \
+#
+#clean-apk:
+#	$(info Removing build APK files...)
+#	rm -rf build-android/dist
+#	rm -f build-android/*.apk
+#
+#
+#build-android: prepare
+#	$(info Building android version...)
+#	p4a apk --private .. --dist_name="cat-printer" --package="io.github.naitlee.catprinter" --name="Cat Printer" \
+#		--icon=icon.png --version=$(version) --bootstrap=webview --window --requirements="`cat build-deps.txt`" \
+#		--blacklist-requirements=sqlite3,openssl --port=8095 --arch=arm64-v8a --blacklist="blacklist.txt" \
+#		--presplash=blank.png --presplash-color=black --add-source="advancedwebview" --orientation=user \
+#		--permission=BLUETOOTH --permission=BLUETOOTH_SCAN --permission=BLUETOOTH_CONNECT \
+#		--permission=BLUETOOTH_ADMIN --permission=ACCESS_FINE_LOCATION --permission=ACCESS_COARSE_LOCATION $@
 
 clean-python:
 	$(info Removing Python cache files...)
@@ -72,7 +72,7 @@ clean-bundles:
 	rm -f cat-printer-*.zip
 	rm -f cat-printer-sha256-*.txt
 
-clean: clean-bundles clean-python clean-apk
+clean: clean-bundles clean-python
 	rm -f cat-printer-*.apk*
 
 .DEFAULT_GOAL=bundle-linux
